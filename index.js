@@ -6,24 +6,58 @@ const app = express();
 let topMovies = [
   {
     title: 'Batman - Dark Knight',
-    director: 'CHristopher Nolan'
+    director: 'Christopher Nolan'
   },
   {
     title: 'The Lord of the Rings',
     director: 'Peter Jackson'
   },
   {
-    title: 'Star Wars: Phantom Menace',
+    title: 'Star Wars: The Empire Strikes Back',
     director: 'George Lucas'
-  }
+  },
+  {
+    title: 'Avengers: Infinity War',
+    director: 'Anthony Russo, Joe Russo'
+  },
+  {
+    title: 'Scott Pilgrim vs. the World',
+    director: 'Edgar Wright'
+  },
+  {
+    title: 'Watchmen',
+    director: 'Zack Snyder'
+  },
+  {
+    title: 'Kung Fu Panda',
+    director: 'Mark Osborne, John Stevenson'
+  },
+  {
+    title: 'Princess Mononoke',
+    director: 'Hayao Miyazaki'
+  },
+  {
+    title: 'John Wick',
+    director: 'Chad Stahelski, David Leitch'
+  },
+  {
+    title: 'Hateful 8',
+    director: 'Quentin Tarantino'
+  },
+  {
+    title: 'Marriage Story',
+    director: 'Noah Baumbach'}
 ];
 
 app.use(morgan('common'))
+
+
+
 app.use(express.static('public'));
 
 // GET requests
 app.get('/', (req, res) => {
-  res.send('Welcome to my book club!');
+  res.send('This is myFlix, the Site with all the info on your favorite Movies!');
 });
 
 app.get('/documentation', (req, res) => {
