@@ -41,8 +41,8 @@
         <td>:title</td>
         <td>GET</td>
         <td>
-          A JSON object holding data about a single movie <br />
-          Example: {Title: "Watchmen", Genre: "", Description: ""}
+          A JSON object holding data about a single movie and in depth data about its genre and director. <br />
+          Example: {Title: "Watchmen", Genre: {Name:"Drama", Description:""}, Director {Name:"Zack Snyder", Bio:: "", Birth-Year:""}, Actors: [""], Description: ""}
         </td>
       </tr>
       <tr>
@@ -66,40 +66,30 @@
           Exmple: Director: { Name: "Edgar Wright", CV: "" },
         </td>
       </tr>
-      <tr>
-        <td>Returns data about an actor by name</td>
-        <td>"/movies/actors/:actorName"</td>
-        <td>:actorName</td>
-        <td>GET</td>
-        <td>
-          A JSON object holding data about a director <br />
-          Exmple: Actor: { Name: "Nick Frost", CV: "" },
-        </td>
-      </tr>
-      <tr>
         <td>Allows new users to register</td>
-        <td>"/users"/</td>
+        <td>"/users"</td>
         <td>none</td>
         <td>POST</td>
         <td>
-          A JSON object holding data about new user that was added <br />
-          Example: { id: 3, name:"Mennis", favoriteMovies:[] },
+          A JSON object holding data about new user that was added, with an added _id <br />
+
         </td>
         <td>
-          A JSON object holding data about the user to add <br />
-          Example: { id:, name : "" } }
+          A JSON object holding data about the user to add (Username, PAssword and Email are required) <br />
+          Example: { Username: "Siegfried", Password:"Roy", Email: "dragonkiller69@gmail.com, FavoriteMovies:"favoriteMovie_Id"}
         </td>
       </tr>
       <tr>
         <td>Updates user info</td>
-        <td>"/users/:id"</td>
-        <td>:id</td>
+        <td>"/users/:Username/"</td>
+        <td>:Username</td>
         <td>PUT</td>
         <td>A JSON object with the updated user-info</td>
+        <td>A JSON object containing additional information such as { Username: "Siegfried", Password:"Balmung", Email: "dragonkiller69@gmail.com, FavoriteMovies:"favoriteMovie_Id"}</td>
       </tr>
       <tr>
         <td>Adds a movie to the user's list of favorites</td>
-        <td>"/users/:id/:title"</td>
+        <td>"/users/:Username/:title"</td>
         <td>:title</td>
         <td>POST</td>
         <td>
@@ -108,8 +98,8 @@
       </tr>
       <tr>
         <td>Removes a movie from a user's list of favorites</td>
-        <td>"/users/:id/:title"</td>
-        <td>:title</td>
+        <td>"/users/:Username/movies/:MovieID"</td>
+        <td>:Username, :MovieID</td>
         <td>DELETE</td>
         <td>
           A text message that states a a favorite movie was removed
@@ -117,34 +107,11 @@
       </tr>
       <tr>
         <td>Deregisters a user</td>
-        <td>"/users/:id"</td>
-        <td>:id</td>
+        <td>"/users/:Username"</td>
+        <td>:Username</td>
         <td>DELETE</td>
         <td>A text message that states the user id has been deleted</td>
       </tr>
     </table>
 <br>
 <br>
-    <table>
-      <tr>
-        <th>Entity</th>
-        <th>Attributes<th>
-      </tr>
-      <tr>
-      <td>Movies</td>
-      <td>ID, Title, Description, Genre, Director, URL to image, Featured (Y/N)</td>
-      </tr>
-      <tr>
-        <td>Director</td>
-        <td>ID, Name, Bio, Birth Year, Death Year</td>
-      </tr>
-      <tr>
-        <td>Genre</td>
-        <td>ID, Name, Description</td>
-      </tr>
-      <tr>
-        <td>Users</td>
-        <td>ID, Username, Password, Email, Birthday, Favorite Movies</td>
-      </tr>
-  </body>
-</html>
