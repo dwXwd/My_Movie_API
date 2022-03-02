@@ -67,18 +67,29 @@
         </td>
       </tr>
         <td>Allows new users to register</td>
-        <td>"/users"</td>
+        <td>"/login"</td>
         <td>none</td>
         <td>POST</td>
         <td>
           A JSON object holding data about new user that was added, with an added _id <br />
-
         </td>
         <td>
-          A JSON object holding data about the user to add (Username, PAssword and Email are required) <br />
+          A JSON object holding data about the user to add (Username, Password and Email are required) <br />
           Example: { Username: "Siegfried", Password:"Roy", Email: "dragonkiller69@gmail.com, FavoriteMovies:"favoriteMovie_Id"}
         </td>
       </tr>
+    </tr>
+      <td>Allows registered users to login</td>
+      <td>"/login?Username=:Username&Password=:Password"</td>
+      <td>:Username, :Password</td>
+      <td>POST</td>
+      <td>
+        A JSON object holding data about new user that was added, with an added _id and an added bearer-token <br />
+      </td>
+      <td>
+        The Username and password - parameters
+      </td>
+    </tr>
       <tr>
         <td>Updates user info</td>
         <td>"/users/:Username/"</td>

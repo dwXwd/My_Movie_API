@@ -20,29 +20,15 @@ const app = express();
 
 app.use(bodyParser.json());
 
-let users = [
-  {
-    id: 1,
-    name: 'Dennis',
-    favoriteMovies: []
-  },
-  {
-    id: 2,
-    name: 'Schmennis',
-    favoriteMovies: []
-  }
-];
+app.use(bodyParser.urlencoded({ extended: true }));
 
-/*
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
 
-app.get('/users', (req, res) => {
-  res.status(200).json(users);
-});
-*/
+//READ all users
 
-//READ all the users in the DB
-
-app.get('/users', (req, res) => {
+app.get('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.find()
     .then((users) => {
       res.status(201).json(users);
@@ -53,22 +39,10 @@ app.get('/users', (req, res) => {
     });
 });
 
-/* CREATE a new user
 
-app.post('/users', (req, res) => {
-  const newUser = req.body;
 
-  if (newUser.name) {
-    newUser.id = uuid.v4();
-    users.push(newUser);
-    res.status(201).json(newUser) //201 means we created something successfully
-  } else {
-    res.status(400).send('Sorry! The user does need a name :(')
-  }
-})*/
-
-// Get a user by username
-app.get('/users/:Username', (req, res) => {
+// READ a user by username
+app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOne({ Username: req.params.Username })
     .then((user) => {
       res.json(user);
@@ -79,7 +53,7 @@ app.get('/users/:Username', (req, res) => {
     });
 });
 
-//Add a user
+//CREATE a user
 /* We’ll expect JSON in this format
 {
   ID: Integer,
@@ -89,7 +63,7 @@ app.get('/users/:Username', (req, res) => {
   Birthday: Date
 }*/
 
-app.post('/users', (req, res) => {
+app.post('/users', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
@@ -114,25 +88,9 @@ app.post('/users', (req, res) => {
       res.status(500).send('Error: ' + error);
     });
 });
-/*
-//UPDATE a user-profile
-
-app.put('/users/:id', (req, res) => {
-  const { id } = req.params;
-  const updatedUser = req.body;
-
-  let user = users.find( user => user.id == id);
-
-  if (user) {
-    user.name = updatedUser.name;
-    res.status(200).json(user) //we did NOT create something new
-  } else {
-    res.status(400).send('Sorry, there was no such user!')
-  }
-})*/
 
 // Update a user's info, by username
-/* We’ll expect JSON in this format
+/* JSON in this format is expected:
 {
   Username: String,
   (required)
@@ -142,7 +100,8 @@ app.put('/users/:id', (req, res) => {
   (required)
   Birthday: Date
 }*/
-app.put('/users/:Username', (req, res) => {
+
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
     {
       Username: req.body.Username,
@@ -162,23 +121,10 @@ app.put('/users/:Username', (req, res) => {
   });
 });
 
-//CREATE a new favorite movie within a user's profile
 
-/*app.post('/users/:id/:title', (req, res) => {
-  const { id, title } = req.params;
 
-  let user = users.find( user => user.id == id);
-
-  if (user) {
-    user.favoriteMovies.push(title);
-    res.status(200).end(`${title} has been added to the array of user ${id}`) //we did NOT create something new
-  } else {
-    res.status(400).send('Sorry, there was no such user!')
-  }
-})*/
-
-// Add a movie to a user's list of favorites
-app.post('/users/:Username/movies/:MovieID', (req, res) => {
+// UPDATE a movie to a user's list of favorites
+app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate({ Username: req.params.Username }, {
      $push: { FavoriteMovies: req.params.MovieID }
    },
@@ -195,8 +141,7 @@ app.post('/users/:Username/movies/:MovieID', (req, res) => {
 
 //DELETE a favorite movie within a user's profile
 
-
-app.delete('/users/:id/:title', (req, res) => {
+app.delete('/users/:id/:title', passport.authenticate('jwt', { session: false }), (req, res) => {
   const { id, title } = req.params;
 
   let user = users.find( user => user.id == id);
@@ -209,24 +154,9 @@ app.delete('/users/:id/:title', (req, res) => {
   }
 })
 
-//DELETE a user's profile
-/*
-
-app.delete('/users/:id', (req, res) => {
-  const { id } = req.params;
-
-  let user = users.find( user => user.id == id);
-
-  if (user) {
-    users = users.filter( user => user.id != id);
-    res.status(200).send(`User ${id} has been successfully deleted`); //we did NOT create something new
-  } else {
-    res.status(400).send('Sorry, there was no such user!')
-  }
-})*/
 
 // Delete a user by username
-app.delete('/users/:Username', (req, res) => {
+app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if (!user) {
@@ -241,109 +171,29 @@ app.delete('/users/:Username', (req, res) => {
     });
 });
 
-
-
-let movies = [
-  {
-    title: 'Batman - Dark Knight',
-    director: {name:'Christopher Nolan'},
-    genre: {name: 'Comic-Adaptation'}
-  },
-  {
-    title: 'The Lord of the Rings',
-    director: {name:'Peter Jackson'},
-    genre: {name:'fantasy'}
-  },
-  {
-    title: 'Star Wars: The Empire Strikes Back',
-    director: {name:'George Lucas'},
-    genre: {name:'Science - Fiction'}
-  },
-  {
-    title: 'Avengers: Infinity War',
-    director: {name:'Anthony Russo, Joe Russo'},
-    genre: {name: 'Comic-Adaptation'}
-  },
-  {
-    title: 'Scott Pilgrim vs. the World',
-    director: {name:'Edgar Wright'},
-    genre: {name: 'Comic-Adaptation'}
-  },
-  {
-    title: 'Watchmen',
-    director: {name:'Zack Snyder'},
-    genre: {name: 'Comic-Adaptation'}
-  },
-  {
-    title: 'Kung Fu Panda',
-    director: {name:'Mark Osborne, John Stevenson'},
-    genre: {name: 'Animation'}
-  },
-  {
-    title: 'Princess Mononoke',
-    director: {name:'Hayao Miyazaki'},
-    genre: {name: 'Anime'}
-  },
-  {
-    title: 'John Wick',
-    director: {name:'Chad Stahelski, David Leitch'},
-    genre: {name: 'Action'}
-  },
-  {
-    title: 'Hateful 8',
-    director: {name:'Quentin Tarantino'},
-    genre: {name: 'Drama'}
-  },
-  {
-    title: 'Marriage Story',
-    director: {name:'Noah Baumbach'},
-    genre: {name: 'Romance'}
-  }
-];
-
-// Gets the list of data about ALL movies
-
-app.get('/movies', (req, res) => {
-  res.status(200).json(movies);
+// READ a movie by Title
+app.get('/movies/:Title', passport.authenticate('jwt', { session: false }), (req, res) => {
+  Movies.findOne({ Title: req.params.Title })
+    .then((movie) => {
+      res.json(movie);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
 });
 
-// Gets the data about a single movie, by title
-
-app.get('/movies/:title', (req, res) => {
-  const { title } = req.params;
-  const movie = movies.find( movie => movie.title === title);
-
-  if (movie) {
-    res.status(200).json(movie);
-  } else {
-    res.status(400).send ('There is no such movie')
-  }
-})
-
-app.get('/movies/genres/:genreName', (req, res) => {
-  const { genreName } = req.params;
-  const genre = movies.find( movie => movie.genre.name === genreName ).genre;
-
-  if (genre) {
-    res.status(200).json(genre);
-  } else {
-    res.status(400).send ('There is no such genre :(')
-  }
-})
-
-app.get('/movies/directors/:directorName', (req, res) => {
-  const { directorName } = req.params;
-  const director = movies.find( movie => movie.director.name === directorName ).director;
-
-  if (director) {
-    res.status(200).json(director);
-  } else {
-    res.status(400).send ('There is no such director :(')
-  }
-})
-
-
-
+// READ info about a director by name
+app.get('/movies/directors/:Name', passport.authenticate('jwt', { session: false }), (req, res) => {
+  Movies.findOne({ "Director.Name": req.params.Name })
+    .then((director) => {
+      res.json(director);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
 
 app.use(morgan('common'))
@@ -373,3 +223,30 @@ app.use((err, req, res, next) => {
 app.listen(8080, () => {
   console.log('Your app is listening on port 8080.');
 });
+
+
+
+// Gets the list of data about ALL movies
+/*
+app.get('/movies/genres/:genreName', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const { genreName } = req.params;
+  const genre = movies.find( movie => movie.genre.name === genreName ).genre;
+
+  if (genre) {
+    res.status(200).json(genre);
+  } else {
+    res.status(400).send ('There is no such genre :(')
+  }
+})
+
+app.get('/movies/directors/:directorName', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const { directorName } = req.params;
+  const director = movies.find( movie => movie.director.name === directorName ).director;
+
+  if (director) {
+    res.status(200).json(director);
+  } else {
+    res.status(400).send ('There is no such director :(')
+  }
+})
+*/
