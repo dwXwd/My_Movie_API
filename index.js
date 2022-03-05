@@ -15,7 +15,7 @@ const Users = Models.User;
 /*mongoose.connect('mongodb://localhost:27017/[movie_api]',
 { useNewUrlParser: true, useUnifiedTopology: true });*/
 
-mongoose.connect('mongodb+srv://dwXwd:Goordsch.92@cluster0.zjhk1.mongodb.net/myFlixDB?retryWrites=true&w=majority',
+mongoose.connect('CONNECTION_URI',
 { useNewUrlParser: true, useUnifiedTopology: true });
 
 
@@ -72,7 +72,7 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
   Birthday: Date
 }*/
 
-app.post('/users', passport.authenticate('jwt', { session: false }),
+app.post('/users',
   [ //validates input on given conditions
     check('Username', 'Username is required').isLength({min: 5}),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
