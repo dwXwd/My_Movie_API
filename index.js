@@ -61,7 +61,7 @@ app.get('/users/:Username', passport.authenticate('jwt', { session: false }), (r
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
   Movies.find()
     .then((movies) => {
-      res.status(201).json(users);
+      res.status(201).json(movies);
     })
     .catch((err) => {
       console.error(err);
@@ -186,6 +186,9 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),  /
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
+
+    let hashedPassword = Users.hashPassword(req.body.Password);
+
   Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
     {
       Username: req.body.Username,
