@@ -12,8 +12,13 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 //connects to database to enable CRUD accessability
-mongoose.connect('mongodb://localhost:27017/[movie_api]',
+/*mongoose.connect('mongodb://localhost:27017/[movie_api]',
+{ useNewUrlParser: true, useUnifiedTopology: true });*/
+
+mongoose.connect('mongodb+srv://dwXwd:Goordsch.92@cluster0.zjhk1.mongodb.net/myFlixDB?retryWrites=true&w=majority',
 { useNewUrlParser: true, useUnifiedTopology: true });
+
+
 
 //integrating express
 const app = express();
