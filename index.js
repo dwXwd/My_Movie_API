@@ -15,9 +15,7 @@ const Users = Models.User;
 /*mongoose.connect('mongodb://localhost:27017/[movie_api]',
 { useNewUrlParser: true, useUnifiedTopology: true });*/
 
-mongoose.connect('CONNECTION_URI',
-{ useNewUrlParser: true, useUnifiedTopology: true });
-
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 //integrating express
