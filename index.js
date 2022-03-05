@@ -226,20 +226,22 @@ app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', { sess
   });
 });
 
-//DELETE a favorite movie within a user's profile
+//Delete Movie From User's Favorite List
 
-app.delete('/users/:id/:title', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const { id, title } = req.params;
-
-  let user = users.find( user => user.id == id);
-
-  if (user) {
-    user.favoriteMovies = user.favoriteMovies.filter( movieTitle => movieTitle !== title);
-    res.status(200).send(`${title} has been removed from the array of user ${id}`) //we did NOT create something new
-  } else {
-    res.status(400).send('Sorry, there was no such user!')
-  }
-})
+app.delete("/users/:Username/movies/:MovieID", passport.authenticate('jwt', { session: false }), (req, res) => {
+  Users.findOneAndUpdate({Username: req.params.Username}, {
+    $pull: {FavoriteMovies: req.params.MovieID}
+  },
+  {new: true},
+  (err, updatedUser) => {
+    if(err) {
+      console.log(err);
+      res.status(500).send('Error ' + err);
+    } else {
+      res.json(updatedUser);
+    }
+  });
+});
 
 
 // Delete a user by username
