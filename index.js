@@ -295,7 +295,7 @@ app.use((err, req, res, next) => {
     });
 
 
-    let allowedOrigins = ['http://localhost:1234'];
+/*    let allowedOrigins = ['http://localhost:1234'];
 
     app.use(cors({
       origin: (origin, callback) => {
@@ -307,7 +307,7 @@ app.use((err, req, res, next) => {
         return callback(null, true);
       }
     }));
-
+*/
 
 // Gets the list of data about ALL movies
 /*
