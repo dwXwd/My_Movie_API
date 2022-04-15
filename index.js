@@ -125,7 +125,8 @@ app.post('/users',
     check('Username', 'Username is required').isLength({min: 5}),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail()
+    check('Email', 'Email does not appear to be valid').isEmail(),
+    check('Birthday').isDate()
   ], (req, res) => {
 
   // check the validation object for errors
@@ -180,7 +181,8 @@ app.put('/users/:Username', passport.authenticate('jwt', { session: false }),  /
     check('Username', 'Username is required').isLength({min: 5}),
     check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
     check('Password', 'Password is required').not().isEmpty(),
-    check('Email', 'Email does not appear to be valid').isEmail()
+    check('Email', 'Email does not appear to be valid').isEmail(),
+    check('Birthday').isDate()
   ], (req, res) => {
 
   // check the validation object for errors
